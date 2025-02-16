@@ -1,7 +1,7 @@
 package com.tgl.cmd.appointments.config;
 
 import java.util.List;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.annotation.Bean;
@@ -29,18 +29,17 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.tgl.cmd.appointments.model.JwtTokenValidatorFilter;
- 
- 
+
 @Configuration
 
 @EnableWebSecurity
 
 public class SecurityConfig {
- 
+
     @Autowired
 
     private JwtTokenValidatorFilter jwtTokenValidatorFilter;
- 
+
     // Password Encoder Bean
 
     @Bean
@@ -50,7 +49,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
 
     }
- 
+
     // Security Filter Chain Bean
 
     @Bean
@@ -59,22 +58,22 @@ public class SecurityConfig {
 
         http
 
-        	.cors().and()
+                .cors().and()
 
-            .csrf().disable()
+                .csrf().disable()
 
-            .authorizeHttpRequests()
+                .authorizeHttpRequests()
 
-            .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()  // Allow authentication APIs
+                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Allow authentication APIs
 
-            .anyRequest().authenticated()
+                .anyRequest().authenticated()
 
-            .and()
+                .and()
 
-            .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)  // Add JWT Filter
+                .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT Filter
 
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // Stateless session
- 
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless session
+
         return http.build();
 
     }
@@ -85,12 +84,13 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Allow frontend origin
+        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://13.71.109.79")); // Allow frontend
+                                                                                                  // origin
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
- 
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
         source.registerCorsConfiguration("/**", configuration);
@@ -100,5 +100,3 @@ public class SecurityConfig {
     }
 
 }
-
- 
