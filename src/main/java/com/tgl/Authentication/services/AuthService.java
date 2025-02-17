@@ -30,8 +30,8 @@ public class AuthService {
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		int length = (int) userRepository.count();
-		
-		user.setUserId("US"+length+1);
+		length+=1;
+		user.setUserId("USP"+ length);
 		
 		return userRepository.save(user);
 	}
