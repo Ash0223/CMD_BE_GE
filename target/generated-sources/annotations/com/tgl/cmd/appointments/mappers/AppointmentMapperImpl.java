@@ -33,6 +33,8 @@ public class AppointmentMapperImpl implements AppointmentMapper {
         createAppointmentDTO.setAppointmentType( appointment.getAppointmentType() );
 
         createAppointmentDTO.setAppointmentDate( formatDate(appointment.getAppointmentDate()) );
+        createAppointmentDTO.setUserId( appointment.getUserId() );
+
 
         return createAppointmentDTO;
     }
@@ -53,7 +55,7 @@ public class AppointmentMapperImpl implements AppointmentMapper {
         appointment.setPurposeOfVisit( dto.getPurposeOfVisit() );
         appointment.setAppointmentType( dto.getAppointmentType() );
         appointment.setAppointmentStatus( dto.getAppointmentStatus() );
-
+        appointment.setUserId( dto.getUserId() );
         appointment.setAppointmentDate( parseDate(dto.getAppointmentDate()) );
 
         return appointment;

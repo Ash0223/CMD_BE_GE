@@ -164,7 +164,7 @@ public class AppointmentController {
      * @return ResponseEntity containing a list of all appointments
      */
 //    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/get-all-appointments/{useId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/get-all-appointments/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Appointment>> getAllAppointments(@PathVariable("userId") String userId) {
         List<Appointment> appointments = this.appointmentService.getAllAppointments(userId);
         return ResponseEntity.ok(appointments);

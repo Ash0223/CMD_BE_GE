@@ -42,8 +42,8 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + token);
             HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
-            System.out.println("22222222222222222222222" + requestEntity);
-            System.out.println("33333333333333333333333" + headers);
+//            System.out.println("22222222222222222222222" + requestEntity);
+//            System.out.println("33333333333333333333333" + headers);
             // Send validation request to Authentication service
             System.out.println("------------------------------Doctor " + requestEntity);
             ResponseEntity<Boolean> validationResponse = restTemplate.exchange(
@@ -65,7 +65,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(token, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            	System.out.println("AAAAAAAAAAAAAAAAA" + authentication);
+//            	System.out.println("AAAAAAAAAAAAAAAAA" + authentication);
         } catch (Exception e) {
         	e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
