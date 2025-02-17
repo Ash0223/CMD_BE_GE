@@ -36,67 +36,66 @@ import com.tgl.cmd.appointments.model.JwtTokenValidatorFilter;
 
 public class SecurityConfig {
 
-    @Autowired
+	@Autowired
 
-    private JwtTokenValidatorFilter jwtTokenValidatorFilter;
+	private JwtTokenValidatorFilter jwtTokenValidatorFilter;
 
-    // Password Encoder Bean
+	// Password Encoder Bean
 
-    @Bean
+	@Bean
 
-    public PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 
-        return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 
-    }
+	}
 
-    // Security Filter Chain Bean
+	// Security Filter Chain Bean
 
-    @Bean
+	@Bean
 
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
+		http
 
-                .cors().and()
+				.cors().and()
 
-                .csrf().disable()
+				.csrf().disable()
 
-                .authorizeHttpRequests()
+				.authorizeHttpRequests()
 
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Allow authentication APIs
+				.requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Allow authentication APIs
 
-                .anyRequest().authenticated()
+				.anyRequest().authenticated()
 
-                .and()
+				.and()
 
-                .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT Filter
+				.addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT Filter
 
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless session
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless session
 
-        return http.build();
+		return http.build();
 
-    }
+	}
 
-    @Bean
+	@Bean
 
-    public CorsConfigurationSource corsConfigurationSource() {
+	public CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration configuration = new CorsConfiguration();
+		CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://13.71.109.79")); // Allow frontend
-                                                                                                  // origin
+		configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://13.71.109.79")); // Allow frontend origin
 
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        source.registerCorsConfiguration("/**", configuration);
+		source.registerCorsConfiguration("/**", configuration);
 
-        return source;
+		return source;
 
-    }
+	}
 
 }

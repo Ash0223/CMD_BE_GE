@@ -2,7 +2,10 @@ package com.tgl.cmd.appointments.service;
 
 import java.util.List;
 
+
 import com.tgl.cmd.appointments.dto.CreateAppointmentDTO;
+import com.tgl.cmd.appointments.dto.AppointmentCountDTO;
+
 import com.tgl.cmd.appointments.model.Appointment;
 
 /**
@@ -37,5 +40,10 @@ public interface IAppointmentService {
     
     public Appointment rescheduleAppointment(String appointmentId, String date, String time);
 
-	public List<Appointment> getAllAppointments();
+	public List<Appointment> getAllAppointments(String userId);
+	
+	
+	public List<AppointmentCountDTO> getAppointmentCounts(String userId);
+
 }
+

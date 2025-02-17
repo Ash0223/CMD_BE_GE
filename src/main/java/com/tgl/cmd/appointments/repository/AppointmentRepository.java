@@ -1,6 +1,7 @@
 package com.tgl.cmd.appointments.repository;
 
 import java.time.LocalDate;
+
 import java.time.LocalTime;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tgl.cmd.appointments.dto.AppointmentCountDTO;
 import com.tgl.cmd.appointments.model.Appointment;
 /**
  * Spring Data JPA repository interface for the Appointment entity.
@@ -30,6 +32,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
 //		    @Param("startTime") LocalTime startTime,
 //		    @Param("endTime") LocalTime endTime
 //		);
+
+	List<Appointment> findByUserId(String userId);  // Derived query method 
+	
+//	@Query("select appointmentStatus, count(ID) from appointemnts where userId = @userId group by appointmentStatus")
+//	List<AppointmentCountDTO> getAppointmentCounts(String userId);
+	
+	@Query("SELECT new com.tgl.cmd.appointments.dto.AppointmentCountDTO(a.appointmentStatus, COUNT(a)) FROM appointments a WHERE a.userId = :userId GROUP BY a.appointmentStatus")
+	List<AppointmentCountDTO> countAppointmentsByStatus(@Param("userId") String userId);
 
 }
  

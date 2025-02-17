@@ -83,7 +83,9 @@ public class Appointment {
     @Column
     private AppointmentStatus appointmentStatus;
     
-
+    @Column
+    private String userId;
+    
     
 }
 

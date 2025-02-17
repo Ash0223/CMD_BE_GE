@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tgl.cmd.appointments.dto.AppointmentCountDTO;
 import com.tgl.cmd.appointments.dto.CreateAppointmentDTO;
 import com.tgl.cmd.appointments.exceptions.AppointmentAlreadyExistsException;
 import com.tgl.cmd.appointments.exceptions.AppointmentNotFoundException;
@@ -149,13 +150,21 @@ public class AppointmentServiceImpl implements IAppointmentService {
         return appointmentRepository.save(appointment);
     }
     
-    
+    //getAppointmentByUserID  
 
 	@Override
-	public List<Appointment> getAllAppointments() {
-		return this.appointmentRepository.findAll();
+	public List<Appointment> getAllAppointments(String userId) {
+//		return this.appointmentRepository.findAll();
+		return this.appointmentRepository.findByUserId(userId);
 	}
 
+	
+	@Override
+	public List<AppointmentCountDTO> getAppointmentCounts(String userId) {
+		List<AppointmentCountDTO> appointments =  this.appointmentRepository.countAppointmentsByStatus(userId);
+		return appointments;
+	}
+	
 	
 	@Override
 	public Appointment rescheduleAppointment(String appointmentId, String newDate, String newTime) {

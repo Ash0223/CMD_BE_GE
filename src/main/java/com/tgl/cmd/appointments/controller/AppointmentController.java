@@ -2,6 +2,7 @@ package com.tgl.cmd.appointments.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.tgl.cmd.appointments.dto.AppointmentCountDTO;
 import com.tgl.cmd.appointments.dto.AppointmentResponseDTO;
 import com.tgl.cmd.appointments.dto.CreateAppointmentDTO;
 import com.tgl.cmd.appointments.dto.ResponseWrapper;
@@ -163,8 +165,14 @@ public class AppointmentController {
      */
 //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/get-all-appointments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Appointment>> getAllAppointments() {
-        List<Appointment> appointments = appointmentService.getAllAppointments();
+    public ResponseEntity<List<Appointment>> getAllAppointments(@PathVariable("userId") String userId) {
+        List<Appointment> appointments = appointmentService.getAllAppointments(userId);
+        return ResponseEntity.ok(appointments);
+    }
+    
+    @GetMapping(value = "/get-appointment-counts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity <List<AppointmentCountDTO>> getAppointmentCounts(@PathVariable("userId") String userId) {
+        List<AppointmentCountDTO> appointments = appointmentService.getAppointmentCounts(userId);
         return ResponseEntity.ok(appointments);
     }
     

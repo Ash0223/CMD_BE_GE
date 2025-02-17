@@ -88,4 +88,11 @@ public class CreateAppointmentDTO {
      */
     @NotNull(message = "Appointment type cannot be null")
     private AppointmentType appointmentType;
+    
+    
+    //userid  - logged in id from FE  
+    @NotNull(message = "UserId cannot be null")
+    @NotEmpty(message = "UserId cannot be empty")
+    private String userId;
+    
 }
