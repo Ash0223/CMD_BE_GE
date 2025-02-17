@@ -29,6 +29,10 @@ public class AuthService {
 //	    }
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		int length = (int) userRepository.count();
+		
+		user.setUserId("US"+length+1);
+		
 		return userRepository.save(user);
 	}
 	
@@ -50,7 +54,8 @@ public class AuthService {
               
         	  String token = jwtUtil.generateToken(username);
         	  token = token.concat("|").concat(user.getUserId()).concat("|").concat(user.getRole().toString());
-        	  
+              System.out.println(token);
+
               return token;
 //        	  return jwtUtil.generateToken(username);
           }
