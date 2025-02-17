@@ -46,7 +46,11 @@ public class AuthService {
       if (userOptional.isPresent()) {
           User user = userOptional.get();
           if (passwordEncoder.matches(password, user.getPassword())) {
-              return jwtUtil.generateToken(username);
+              
+        	  String token = jwtUtil.generateToken(username);
+        	  token += token.concat("|").concat(user.getUserId()).concat("|").concat(user.getRole().toString());
+        	  
+              
           }
       }
       return null;  // Invalid credentials
