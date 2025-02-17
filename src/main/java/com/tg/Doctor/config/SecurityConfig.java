@@ -35,23 +35,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors().and()
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Allow authentication APIs
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT Filter
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless session
+        	.cors().and()
+            .csrf().disable()
+            .authorizeHttpRequests()
+            .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()  // Allow authentication APIs
+            .anyRequest().authenticated()
+            .and()
+            .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)  // Add JWT Filter
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // Stateless session
 
         return http.build();
     }
-
+    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://13.71.109.79")); // Allow frontend
-                                                                                                  // origin
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Allow frontend origin
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
@@ -59,5 +58,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+    
 }

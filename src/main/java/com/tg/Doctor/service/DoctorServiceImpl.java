@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tg.Doctor.dtos.DoctorDTO;
@@ -67,9 +69,21 @@ public class DoctorServiceImpl implements IDoctorService {
      * @throws DoctorProfileCreationException if an error occurs while retrieving doctors
      */
     @Override
-    public List<Doctor> getAllDoctors() {
+    public Page<Doctor> getAllDoctorsWithPagination(Pageable pageable) {
         log.info("Getting all doctors...");
         try { 
+            return doctorRepository.findAll(pageable);
+        } catch (Exception ex) {
+            log.error("Error getting all doctors: {}", ex.getMessage(), ex);
+
+            throw new DoctorProfileCreationException("Error getting all doctors", ex);
+        }
+    }
+    
+    @Override
+    public List<Doctor> getAllDoctors() {
+        log.info("Getting all doctors...");
+        try {
             return doctorRepository.findAll();
         } catch (Exception ex) {
             log.error("Error getting all doctors: {}", ex.getMessage(), ex);

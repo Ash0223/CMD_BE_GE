@@ -2,6 +2,9 @@ package com.tg.Doctor.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.tg.Doctor.dtos.DoctorDTO;
 import com.tg.Doctor.exceptions.DoctorAlreadyExistsException;
@@ -65,14 +69,27 @@ public class DoctorController {
      * 
      * @return ResponseEntity containing the list of doctors or an error message if an exception occurs.
      */
+    @GetMapping(value = "/get-list-of-doctors", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<?> getAllDoctorsWithPaginationWithPagination(@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "10")int size) { 
+        try {
+        	Pageable pageable = PageRequest.of(page,size);
+            Page<Doctor> doctors = doctorService.getAllDoctorsWithPagination(pageable);
+            return new ResponseEntity<>(doctors, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching doctors: " + e.getMessage());
+        }
+    }
+    
     @GetMapping(value = "/get-all-doctors", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<?> getAllDoctors() { 
+    public ResponseEntity<?> getAllDoctors() {
         try {
             List<Doctor> doctors = doctorService.getAllDoctors();
             return new ResponseEntity<>(doctors, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching doctors: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching doctors: " + e.getMessage());
         }
     }
  

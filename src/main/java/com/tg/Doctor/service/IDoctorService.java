@@ -2,6 +2,9 @@ package com.tg.Doctor.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.tg.Doctor.dtos.DoctorDTO;
 import com.tg.Doctor.models.Address;
 import com.tg.Doctor.models.Doctor;
@@ -10,6 +13,8 @@ import com.tg.Doctor.models.Experience;
 public interface IDoctorService {
 	
 
+	Page<Doctor> getAllDoctorsWithPagination(Pageable pageable);
+	
 	List<Doctor> getAllDoctors();
 
 	Doctor addDoctor(DoctorDTO doctorDTO);
