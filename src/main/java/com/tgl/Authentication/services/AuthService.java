@@ -27,6 +27,7 @@ public class AuthService {
 //		if (user.getRole() == null) {
 //	        user.setRole(Role.USER); // Default role
 //	    }
+		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 	}
@@ -49,7 +50,9 @@ public class AuthService {
               
         	  String token = jwtUtil.generateToken(username);
         	  token = token.concat("|").concat(user.getUserId()).concat("|").concat(user.getRole().toString());
-        	  return token;              
+        	  
+              return token;
+//        	  return jwtUtil.generateToken(username);
           }
       }
       return null;  // Invalid credentials
