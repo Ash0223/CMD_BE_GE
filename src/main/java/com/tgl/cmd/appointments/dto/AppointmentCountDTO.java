@@ -1,13 +1,20 @@
 package com.tgl.cmd.appointments.dto;
 
+import com.tgl.cmd.appointments.model.AppointmentStatus;
+
 import lombok.AllArgsConstructor;
+
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class AppointmentCountDTO {
 
 	private String status;
 	
-	private int count;
+	private Long count;
+	
+	public AppointmentCountDTO(AppointmentStatus  appointmentStatus, Long count) {
+        this.status = appointmentStatus.name();  // Convert enum to string
+        this.count = count;
+    }
 }

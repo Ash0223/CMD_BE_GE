@@ -164,22 +164,18 @@ public class AppointmentController {
      * @return ResponseEntity containing a list of all appointments
      */
 //    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/get-all-appointments", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/get-all-appointments/{useId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Appointment>> getAllAppointments(@PathVariable("userId") String userId) {
-        List<Appointment> appointments = appointmentService.getAllAppointments(userId);
+        List<Appointment> appointments = this.appointmentService.getAllAppointments(userId);
         return ResponseEntity.ok(appointments);
     }
     
-    @GetMapping(value = "/get-appointment-counts", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/get-appointment-counts/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity <List<AppointmentCountDTO>> getAppointmentCounts(@PathVariable("userId") String userId) {
-        List<AppointmentCountDTO> appointments = appointmentService.getAppointmentCounts(userId);
+        List<AppointmentCountDTO> appointments = this.appointmentService.getAppointmentCounts(userId);
         return ResponseEntity.ok(appointments);
     }
     
-    
-    
-    //add to set completed from doctor
-    
-    
+      
     
 }

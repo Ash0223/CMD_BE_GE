@@ -19,27 +19,31 @@ import com.tgl.cmd.appointments.model.Appointment;
  */
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, String> {
-//	List<Appointment> getAppointmentByDate(LocalDate startDate, LocalDate endDate);
-	
-//	@Query("SELECT a FROM Appointment a WHERE a.patient.patientId = :patientId " +
-//		       "AND a.doctor.doctorId = :doctorId " +
-//		       "AND a.appointmentDate = :appointmentDate " +
-//		       "AND a.appointmentTime BETWEEN :startTime AND :endTime")
-//		List<Appointment> findAppointmentsByCriteria(
-//		    @Param("patientId") String patientId,
-//		    @Param("doctorId") String doctorId,
-//		    @Param("appointmentDate") LocalDate appointmentDate,
-//		    @Param("startTime") LocalTime startTime,
-//		    @Param("endTime") LocalTime endTime
-//		);
 
 	List<Appointment> findByUserId(String userId);  // Derived query method 
 	
 //	@Query("select appointmentStatus, count(ID) from appointemnts where userId = @userId group by appointmentStatus")
 //	List<AppointmentCountDTO> getAppointmentCounts(String userId);
 	
-	@Query("SELECT new com.tgl.cmd.appointments.dto.AppointmentCountDTO(a.appointmentStatus, COUNT(a)) FROM appointments a WHERE a.userId = :userId GROUP BY a.appointmentStatus")
-	List<AppointmentCountDTO> countAppointmentsByStatus(@Param("userId") String userId);
+	
+	 @Query("SELECT new com.tgl.cmd.appointments.dto.AppointmentCountDTO(a.appointmentStatus, COUNT(a)) FROM Appointment a WHERE a.userId = :userId GROUP BY a.appointmentStatus")
+	    List<AppointmentCountDTO> getAppointmentCounts(@Param("userId") String userId);
 
 }
  
+
+
+
+//List<Appointment> getAppointmentByDate(LocalDate startDate, LocalDate endDate);
+
+//@Query("SELECT a FROM Appointment a WHERE a.patient.patientId = :patientId " +
+//	       "AND a.doctor.doctorId = :doctorId " +
+//	       "AND a.appointmentDate = :appointmentDate " +
+//	       "AND a.appointmentTime BETWEEN :startTime AND :endTime")
+//	List<Appointment> findAppointmentsByCriteria(
+//	    @Param("patientId") String patientId,
+//	    @Param("doctorId") String doctorId,
+//	    @Param("appointmentDate") LocalDate appointmentDate,
+//	    @Param("startTime") LocalTime startTime,
+//	    @Param("endTime") LocalTime endTime
+//	);

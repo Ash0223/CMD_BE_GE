@@ -50,6 +50,8 @@ public class AppointmentServiceImpl implements IAppointmentService {
 
     public AppointmentServiceImpl() {
 		// TODO Auto-generated constructor stub
+    	
+    	
     	doctorService = DoctorServiceFactory.create("mock");
     	patientService = PatientServiceFactory.create("mock");
 	}
@@ -161,9 +163,9 @@ public class AppointmentServiceImpl implements IAppointmentService {
 	
 	@Override
 	public List<AppointmentCountDTO> getAppointmentCounts(String userId) {
-		List<AppointmentCountDTO> appointments =  this.appointmentRepository.countAppointmentsByStatus(userId);
-		return appointments;
+	    return appointmentRepository.getAppointmentCounts(userId);
 	}
+
 	
 	
 	@Override
