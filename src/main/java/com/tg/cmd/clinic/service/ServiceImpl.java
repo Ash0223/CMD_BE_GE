@@ -2,6 +2,9 @@ package com.tg.cmd.clinic.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.tg.cmd.clinic.dto.ClinicDTO;
 import com.tg.cmd.clinic.dto.DoctorDTO;
 import com.tg.cmd.clinic.model.Clinic;
@@ -40,6 +43,12 @@ public class ServiceImpl implements ClinicService    {
 
 	@Override
 	public DoctorDTO fetchDoctorInfoByClinicId(String clinicId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Page<Clinic> viewAllClinicWithPagination(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,6 +3,8 @@ package com.tg.cmd.clinic.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tg.cmd.clinic.dto.ClinicDTO;
@@ -120,6 +122,18 @@ public class ClinicServiceImpl implements ClinicService {
             throw new RuntimeException("Error retrieving all clinics: " + e.getMessage());
         }
     }
+    
+    @Override
+	public Page<Clinic> viewAllClinicWithPagination(Pageable pageable) {
+    	try {
+            logger.info("Retrieving all clinics from the database");
+            return serviceRepository.findAll(pageable);
+            
+        } catch (Exception e) {
+            logger.error("Error retrieving all clinics", e);
+            throw new RuntimeException("Error retrieving all clinics: " + e.getMessage());
+        }
+	}
 
     /**
      * Retrieves a clinic by its ID.

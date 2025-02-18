@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
 
 import com.tg.cmd.clinic.dto.ClinicDTO;
 import com.tg.cmd.clinic.model.Clinic;
@@ -21,4 +22,5 @@ public interface ClinicMappers {
                   .map(this::toClinicDTO) // Map each Clinic to ClinicDTO
                   .collect(Collectors.toList());
       }
+      
 }

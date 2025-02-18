@@ -1,6 +1,9 @@
 package com.tg.cmd.clinic.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -52,6 +55,22 @@ public class ServiceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+    
+    @GetMapping("/get-list-of-services")
+    //  @PreAuthorize("hasRole('USER')")
+      public ResponseEntity<?> viewAllClinicWithPagination(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "10")int size) {
+          try {
+              // Retrieve the list of clinics
+        	  Pageable pageable = PageRequest.of(page, size);
+              Page<Clinic> clinics = clinicService.viewAllClinicWithPagination(pageable);
+
+              // Return the list of ClinicDTOs in the response
+              return new ResponseEntity<>(clinics,HttpStatus.OK);
+          } catch (Exception e) {
+              // Handle any unexpected errors by returning an internal server error response
+              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+          }
+      }
 
     /**
      * Retrieves a specific clinic service by its ID.
