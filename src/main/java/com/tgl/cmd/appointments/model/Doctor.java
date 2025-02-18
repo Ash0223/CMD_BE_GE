@@ -28,6 +28,4 @@ public class Doctor {
     private String associatedClinicName;
     
     
-//    @Convert(converter = ListToJsonConverter.class, attributeName = "value")
-//    private Map<Days, List<String>> weeklyActiveHours;
 }

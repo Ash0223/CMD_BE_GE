@@ -33,6 +33,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
  
         String token = authHeader.substring(7); // Remove "Bearer " prefix
         System.out.println("++++++++++++++++++++++++++++++++++++++" +  token);
+        
 //        String authServiceUrl = "http://localhost:8080/api/auth/validate";
         String authServiceUrl = "https://cmd-authentication-be-service.azurewebsites.net/api/auth/validate";
 

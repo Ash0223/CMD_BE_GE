@@ -2,12 +2,15 @@ package com.tgl.cmd.appointments.service;
 
 import java.time.LocalDate;
 
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tgl.cmd.appointments.dto.AppointmentCountDTO;
@@ -111,7 +114,7 @@ public class AppointmentServiceImpl implements IAppointmentService {
             appointmentDTO.setAppointmentStatus(AppointmentStatus.SCHEDULED);
             appointmentDTO.setDoctor(doctorService.getDoctorById(appointmentDTO.getDoctor().getDoctorId()));
             appointmentDTO.setPatient(patientService.getPatientById(appointmentDTO.getPatient().getPatientId()));
-            log.info("Final appointment date before saving dto 22: " + appointmentDTO.getAppointmentDate());
+            log.info("Final appointment date before saving dto : " + appointmentDTO.getAppointmentDate());
 
             // Convert DTO to Entity
             Appointment newAppointmentRequest = appointmentMapper.toAppointment(appointmentDTO);
@@ -152,15 +155,36 @@ public class AppointmentServiceImpl implements IAppointmentService {
         return appointmentRepository.save(appointment);
     }
     
-    //getAppointmentByUserID  
-
-	@Override
+    @Override
 	public List<Appointment> getAllAppointments(String userId) {
-//		return this.appointmentRepository.findAll();
 		return this.appointmentRepository.findByUserId(userId);
 	}
+    
+    @Override
+    public Page<Appointment> getAllAppointmentsWithPagination(Pageable pageable) {
+        log.info("Getting all doctors...");
+        try { 
+            return appointmentRepository.findAll(pageable);
+        } catch (Exception ex) {
+            log.error("Error getting all appointments: {}", ex.getMessage(), ex);
 
-	
+            throw new AppointmentNotFoundException("Error getting all appointments" + ex);
+        }
+    }
+
+    @Override
+    public Page<Appointment> getAllAppointmentsWithPagination(Pageable pageable,String userId) {
+        log.info("Getting all doctors...");
+        try { 
+            return appointmentRepository.findByUserId(pageable, userId);
+        } catch (Exception ex) {
+            log.error("Error getting all appointments: {}", ex.getMessage(), ex);
+
+            throw new AppointmentNotFoundException("Error getting all appointments" + ex);
+        }
+    }
+    
+		
 	@Override
 	public List<AppointmentCountDTO> getAppointmentCounts(String userId) {
 	    return appointmentRepository.getAppointmentCounts(userId);
@@ -213,7 +237,11 @@ public class AppointmentServiceImpl implements IAppointmentService {
         return patientService.getPatientStatusFromPatientApi(patientId);
     }
     
- // Helper method for parsing date
+    
+    
+    
+    
+    // Helper method for parsing date
     private LocalDate parseDate(String date) throws InvalidDateFormatException {
         try {
             return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -235,6 +263,16 @@ public class AppointmentServiceImpl implements IAppointmentService {
     
 
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

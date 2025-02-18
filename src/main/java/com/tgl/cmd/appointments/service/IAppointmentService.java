@@ -2,7 +2,8 @@ package com.tgl.cmd.appointments.service;
 
 import java.util.List;
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.tgl.cmd.appointments.dto.CreateAppointmentDTO;
 import com.tgl.cmd.appointments.dto.AppointmentCountDTO;
@@ -43,8 +44,12 @@ public interface IAppointmentService {
 
 	public List<Appointment> getAllAppointments(String userId);
 	
-	
 	public List<AppointmentCountDTO> getAppointmentCounts(String userId);
+	
+	public Page<Appointment> getAllAppointmentsWithPagination(Pageable pageable);
+	
+	public Page<Appointment> getAllAppointmentsWithPagination(Pageable pageable, String userId);
+
 
 }
 

@@ -2,6 +2,7 @@ package com.tgl.cmd.appointments.externalservice;
 
 import java.time.DayOfWeek;
 
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -23,11 +24,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.tgl.cmd.appointments.config.JwtTokenService;
 import com.tgl.cmd.appointments.dto.CreateAppointmentDTO;
+import com.tgl.cmd.appointments.dto.DoctorDTO;
 import com.tgl.cmd.appointments.model.Appointment;
 import com.tgl.cmd.appointments.model.Doctor;
 import com.tgl.cmd.appointments.repository.AppointmentRepository;
@@ -45,6 +52,7 @@ public class DoctorServiceImp implements IDoctorService {
     @Autowired
     AppointmentRepository appointmentRepository;
     
+    
     @Autowired
     private ResponseEntity<String> doctorResponse;
 //    private RestTemplate restTemplate;
@@ -59,6 +67,8 @@ public class DoctorServiceImp implements IDoctorService {
     @Autowired
     Doctor doctor;
     
+    private final JwtTokenService jwtTokenService = new JwtTokenService();
+
     /**
      * Method to check doctor availability by calling the doctor API.
      *
@@ -71,7 +81,7 @@ public class DoctorServiceImp implements IDoctorService {
 
     	    try {
     	        // Call the doctor API to get doctor availability
-    	        String url = doctorApiUrl + "/get-doctor-by-Id" + doctorId;
+    	        String url = doctorApiUrl + "/get-doctor-by-Id/" + doctorId;
 				ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
 
     	        log.info("Doctor API Response: {}", response.getBody());
@@ -165,44 +175,69 @@ public class DoctorServiceImp implements IDoctorService {
             return false;
         }
     }
-    
     @Override
     public Doctor getDoctorById(String doctorId) {
-    	if(doctor==null) {
-			doctor = new Doctor();
-		}
+        // Create a new Doctor object for this method call
+        Doctor doctor = new Doctor();
         doctor.setDoctorId(doctorId); // Set the doctorId from the method argument
-        
+
         try {
-            // Call the doctor API to get doctor availability
-            String url = doctorApiUrl + "/get-doctor-by-Id/" + doctorId;
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+            // API URL
+            String url = doctorApiUrl + "/get-doctor-by-id/" + doctorId;
 
-            log.info("Doctor API Response: {}", response.getBody());
+            // Retrieve JWT token (assuming it's stored somewhere, like SecurityContextHolder or a service)
+            String jwtToken = jwtTokenService.getJwtToken(); // Implement this method to get the token
 
-            if (response.getBody() != null) {
-                // Parse XML response
-                String xmlResponse = response.getBody();
-                
-                // Parse XML using a library like JAXB, DOM, or a simpler method
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                InputStream is = new ByteArrayInputStream(xmlResponse.getBytes());
-                Document document = builder.parse(is);
-                
-                // Extract data from XML
-                Element root = document.getDocumentElement();
-                doctor.setDoctorName(getTagValue("doctorName", root));
-                doctor.setDoctorEmail(getTagValue("email", root));
-                doctor.setAssociatedClinicId(getTagValue("clinicId", root));
-                doctor.setAssociatedClinicName(getTagValue("clinicName", root));
+            // Check if JWT token is available
+            if (jwtToken == null || jwtToken.isEmpty()) {
+                log.error("JWT token is missing, cannot proceed with API call");
+                throw new RuntimeException("Unauthorized request: Missing JWT token");
             }
+
+            // Create headers with Authorization
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + jwtToken);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            // Create HttpEntity with headers
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            // Call external API with JWT authentication
+            ResponseEntity<DoctorDTO> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<DoctorDTO>() {}
+            );
+
+            // Check if response is successful
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+                log.error("Failed to fetch doctor details. Status: {}", response.getStatusCode());
+                throw new RuntimeException("Error fetching doctor details");
+            }
+
+            DoctorDTO doctorDTO = response.getBody();
+
+            // Map API response to Doctor object
+            doctor.setDoctorName(doctorDTO.getFirstName() + " " + doctorDTO.getLastName());
+            doctor.setDoctorEmail(doctorDTO.getEmail());
+            doctor.setAssociatedClinicId(doctorDTO.getClinicId());
+            doctor.setAssociatedClinicName(
+                (doctorDTO.getExperiences() != null && !doctorDTO.getExperiences().isEmpty())
+                    ? doctorDTO.getExperiences().get(0).getClinicName()
+                    : null
+            );
+
+            log.info("Doctor API Response: {}", doctorDTO);
+
         } catch (Exception e) {
             log.error("Error calling doctor API: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch doctor details", e); // Rethrow as a custom exception if needed
         }
 
         return doctor;
     }
+
 
     /**
      * Helper method to extract the text content of a specific XML tag

@@ -42,10 +42,10 @@ public class PatientServiceMockImpl implements IPatientService {
     		patient = new Patient();
     	}
     	patient.setPatientId(patientId);
-    	patient.setAge(20);
-    	patient.setContactNumber("1234567890");
-    	patient.setPatientEmail("patient@email.com");
-    	patient.setPatientName("Patient_Name");
+    	patient.setAge(41);
+    	patient.setContactNumber("+19192721722");
+    	patient.setPatientEmail("patient2743@patientmail.com");
+    	patient.setPatientName("David Black");
     	patient.setActive(true);
         return patient;
     }

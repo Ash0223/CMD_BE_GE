@@ -3,8 +3,10 @@ package com.tgl.cmd.appointments.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -142,7 +144,6 @@ public class AppointmentController {
             @RequestParam("newTime") String newTime) {
     	try {
     		
-    		
     		System.out.println("Received Date: " + newDate);
     		System.out.println("Received Time: " + newTime);
 
@@ -169,6 +170,30 @@ public class AppointmentController {
         List<Appointment> appointments = this.appointmentService.getAllAppointments(userId);
         return ResponseEntity.ok(appointments);
     }
+    
+//    @GetMapping(value = "/get-list-of-appointments", produces = MediaType.APPLICATION_JSON_VALUE)
+////  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+//  public ResponseEntity<?> getAllAppointmentsWithPaginationWithPagination(@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "10")int size) { 
+//      try {
+//      	Pageable pageable = PageRequest.of(page,size);
+//          Page<Appointment> appointments = appointmentService.getAllAppointmentsWithPagination(pageable);
+//          return new ResponseEntity<>(appointments, HttpStatus.OK);
+//      } catch (Exception e) {
+//          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching appointments: " + e.getMessage());
+//      }
+//  }
+    
+    @GetMapping(value = "/get-list-of-appointments/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+  public ResponseEntity<?> getAllAppointmentsWithPaginationWithPagination(@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "10")int size,@PathVariable("userId") String userId) { 
+      try {
+      	Pageable pageable = PageRequest.of(page,size);
+          Page<Appointment> appointments = appointmentService.getAllAppointmentsWithPagination(pageable, userId);
+          return new ResponseEntity<>(appointments, HttpStatus.OK);
+      } catch (Exception e) {
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching appointments: " + e.getMessage());
+      }
+  }
     
     @GetMapping(value = "/get-appointment-counts/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity <List<AppointmentCountDTO>> getAppointmentCounts(@PathVariable("userId") String userId) {

@@ -45,7 +45,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class IdGenerator implements IdentifierGenerator {
 
-    private static final int RANDOM_MIN = 1000; // Minimum value for the random number
+    private static final int RANDOM_MIN = 2001; // Minimum value for the random number
     private static final int RANDOM_MAX = 9999; // Maximum value for the random number
     private static final String ID_PREFIX = "APT"; // Prefix for the ID
 
@@ -66,6 +66,6 @@ public class IdGenerator implements IdentifierGenerator {
         int currentYear = Year.now().getValue();
 
         // Construct and return the unique ID
-        return String.format("%s-%d-%d", ID_PREFIX, randomNum, currentYear); // APT-1234-2024
+        return String.format("%s_%d_%d", ID_PREFIX, randomNum, currentYear); // APT_1234_2024
     }
 }

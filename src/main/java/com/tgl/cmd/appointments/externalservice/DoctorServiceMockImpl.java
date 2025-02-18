@@ -102,10 +102,10 @@ public class DoctorServiceMockImpl implements IDoctorService {
 			doctor = new Doctor();
 		}
 		doctor.setDoctorId(doctorId);
-		doctor.setDoctorName("Dcotor_Name");
-		doctor.setDoctorEmail("doctor@email.com");
-		doctor.setAssociatedClinicId("CLI-1234-2024");
-		doctor.setAssociatedClinicName("Clinic_Name");
+		doctor.setDoctorName("John Doe");
+		doctor.setDoctorEmail("jdoe@email.com");
+		doctor.setAssociatedClinicId("CLI_1002_2024");
+		doctor.setAssociatedClinicName("Global Health Institute");
 		return doctor;
 	}
 
